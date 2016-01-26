@@ -7,8 +7,16 @@ from keras.preprocessing.image import ImageDataGenerator
 from model import get_model
 from utils import crps, real_to_cdf, preprocess
 
-PREPROCDATA = '/storage/hpc_dmytro/Kaggle/SDSB/images/keras_size64/'
-MODELS = '/storage/hpc_dmytro/Kaggle/SDSB/models/keras/size64/'
+if len(sys.argv) < 1:
+  print 'Usage:', sys.argv[0], '<preprocessing_type> <model_name>'
+  print 'Usage example: python train.py size64 keras'
+  sys.exit(2)
+
+preproc_type = sys.argv[1]
+model_name = sys.argv[2]
+
+PREPROCDATA = '/storage/hpc_dmytro/Kaggle/SDSB/images/' + model_name + '_' + preproc_type + '/'
+MODELS = '/storage/hpc_dmytro/Kaggle/SDSB/models/' + model_name + '/' + preproc_type + '/'
 
 def load_train_data():
     """
