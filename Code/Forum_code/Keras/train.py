@@ -6,6 +6,7 @@ from keras.preprocessing.image import ImageDataGenerator
 
 from model import get_model
 from utils import crps, real_to_cdf, preprocess
+from datetime import datetime
 
 if len(sys.argv) < 1:
   print 'Usage:', sys.argv[0], '<preprocessing_type> <model_name>'
@@ -14,9 +15,10 @@ if len(sys.argv) < 1:
 
 preproc_type = sys.argv[1]
 model_name = sys.argv[2]
+current_date = "run_" + str(datetime.now()).replace(":", "-").split(".")[0].replace(" ", "_")
 
-PREPROCDATA = '/storage/hpc_dmytro/Kaggle/SDSB/images/' + model_name + '_' + preproc_type + '/'
-MODELS = '/storage/hpc_dmytro/Kaggle/SDSB/models/' + model_name + '/' + preproc_type + '/'
+PREPROCDATA = '/storage/hpc_dmytro/Kaggle/SDSB/images/' + preproc_type + '/'
+MODELS = '/storage/hpc_dmytro/Kaggle/SDSB/models/' + preproc_type + '/' + model_name + '/' + current_date + '/'
 
 def load_train_data():
     """
