@@ -5,12 +5,13 @@ import numpy as np
 from keras.preprocessing.image import ImageDataGenerator
 
 from model import get_model
-from utils import crps, real_to_cdf, preprocess
+from utils import crps, real_to_cdf, preprocess, rotation_augmentation, shift_augmentation
 from datetime import datetime
 
+
 if len(sys.argv) < 1:
-  print 'Usage:', sys.argv[0], '<preprocessing_type> <model_name>'
-  print 'Usage example: python train.py size64 kbasic'
+  print('Usage:' + sys.argv[0] + '<preprocessing_type> <model_name>')
+  print('Usage example: python train.py size64 kbasic')
   sys.exit(2)
 
 preproc_type = sys.argv[1]
@@ -95,20 +96,15 @@ def train():
         print('Iteration {0}/{1}'.format(i + 1, nb_iter))
         print('-'*50)
 
-        hist_systole = model_systole.fit_generator(
-                                         datagen.flow(X_train, y_train[:, 0], batch_size=batch_size, shuffle=True),
-                                         samples_per_epoch=X_train.shape[0],
-                                         nb_epoch=epochs_per_iter, verbose=1,
-                                         validation_data=(X_test, y_test[:, 0]),
-                                         nb_worker=1)
-
+	print('Augmenting images - rotations')
+ 	X_train_aug = rotation_augmentation(X_train, 15)
+ 	print('Augmenting images - shifts')
+ 	X_train_aug = shift_augmentation(X_train_aug, 0.1, 0.1)
+ 	print('Fitting systole model...')
+ 	hist_systole = model_systole.fit(X_train_aug, y_train[:, 0], shuffle=True, nb_epoch=epochs_per_iter, batch_size=batch_size, validation_data=(X_test, y_test[:, 0]))
         print('Fitting diastole model...')
-        hist_diastole = model_diastole.fit_generator(
-                                         datagen.flow(X_train, y_train[:, 1], batch_size=batch_size, shuffle=True),
-                                         samples_per_epoch=X_train.shape[0],
-                                         nb_epoch=epochs_per_iter, verbose=1,
-                                         validation_data=(X_test, y_test[:, 1]),
-                                         nb_worker=1)
+	
+	hist_diastole = model_diastole.fit(X_train_aug, y_train[:, 1], shuffle=True, nb_epoch=epochs_per_iter, batch_size=batch_size, validation_data=(X_test, y_test[:, 1]))
 
         # sigmas for predicted data, actually loss function values (RMSE)
         loss_systole = hist_systole.history['loss'][-1]
