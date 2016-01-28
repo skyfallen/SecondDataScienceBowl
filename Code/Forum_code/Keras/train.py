@@ -156,7 +156,7 @@ def train():
             model_systole.save_weights(MODELS + 'weights_diastole_best.hdf5', overwrite=True)
 
         # save best (lowest) val losses in file (to be later used for generating submission)
-        with open('val_loss.txt', mode='w+') as f:
+        with open(MODELS + 'val_loss.txt', mode='w+') as f:
             f.write(str(min_val_loss_systole))
             f.write('\n')
             f.write(str(min_val_loss_diastole))
