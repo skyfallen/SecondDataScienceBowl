@@ -139,12 +139,13 @@ def train():
             print('CRPS(test) = {0}'.format(crps_test))
 
         print('Saving weights...')
-        # save weights so they can be loaded later
-        #model_systole.save_weights('weights_systole.hdf5', overwrite=True)
-        #model_diastole.save_weights('weights_diastole.hdf5', overwrite=True)
 
-        if not os.path.exists(MODELS):
-            os.makedirs(MODELS)
+  	if not os.path.exists(MODELS):
+        	os.makedirs(MODELS)        
+	
+	# save weights so they can be loaded later
+        model_systole.save_weights(MODELS + 'weights_systole.hdf5', overwrite=True)
+        model_diastole.save_weights(MODELS + 'weights_diastole.hdf5', overwrite=True)
 
         # for best (lowest) val losses, save weights
         if val_loss_systole < min_val_loss_systole:
