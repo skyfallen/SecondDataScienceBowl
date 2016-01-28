@@ -8,8 +8,9 @@ from model import get_model
 from utils import crps, real_to_cdf, preprocess, rotation_augmentation, shift_augmentation
 from datetime import datetime
 
+import os
 
-if len(sys.argv) < 1:
+if len(sys.argv) < 2:
   print('Usage:' + sys.argv[0] + '<preprocessing_type> <model_name>')
   print('Usage example: python train.py size64 kbasic')
   sys.exit(2)
@@ -78,7 +79,7 @@ def train():
                                  featurewise_std_normalization=False,
                                  rotation_range=15)
 
-    nb_iter = 1
+    nb_iter = 200
     epochs_per_iter = 1
     batch_size = 32
     calc_crps = 1  # calculate CRPS every n-th iteration (set to 0 if CRPS estimation is not needed)
@@ -142,6 +143,9 @@ def train():
         #model_systole.save_weights('weights_systole.hdf5', overwrite=True)
         #model_diastole.save_weights('weights_diastole.hdf5', overwrite=True)
 
+        if not os.path.exists(MODELS):
+            os.makedirs(MODELS)
+
         # for best (lowest) val losses, save weights
         if val_loss_systole < min_val_loss_systole:
             min_val_loss_systole = val_loss_systole
@@ -156,3 +160,5 @@ def train():
             f.write(str(min_val_loss_systole))
             f.write('\n')
             f.write(str(min_val_loss_diastole))
+
+train()
