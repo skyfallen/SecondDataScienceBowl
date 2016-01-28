@@ -6,7 +6,8 @@ import dicom
 from scipy.misc import imresize
 
 RAWDATA = '/storage/hpc_dmytro/Kaggle/SDSB/images/raw/'
-PREPROCDATA = '/storage/hpc_dmytro/Kaggle/SDSB/images/sample_size64/'
+LABELSDIR = '/storage/hpc_dmytro/Kaggle/SDSB/labels/'
+PREPROCDATA = '/storage/hpc_dmytro/Kaggle/SDSB/images/size64/'
 
 def crop_resize(img):
     """
@@ -85,11 +86,11 @@ def load_images(from_dir, verbose=True):
                 if verbose:
                     if total % 1000 == 0:
                         print('Images processed {0}'.format(total))
-                    if total == 1000:
-                        break
+                    #if total == 1000:
+                    #    break
                 total += 1
-        if total == 1000:
-            break
+        #if total == 1000:
+        #    break
     
     x = 0
     try:
@@ -118,7 +119,7 @@ def map_studies_results():
     Maps studies to their respective targets.
     """
     id_to_results = dict()
-    train_csv = open(RAWDATA + '/train.csv')
+    train_csv = open(LABELSDIR + '/train.csv')
     lines = train_csv.readlines()
     i = 0
     for item in lines:
