@@ -6,7 +6,7 @@ import dicom
 from scipy.misc import imresize
 
 RAWDATA = '/storage/hpc_dmytro/Kaggle/SDSB/images/raw/'
-PREPROCDATA = '/storage/hpc_dmytro/Kaggle/SDSB/images/keras_size64/'
+PREPROCDATA = '/storage/hpc_dmytro/Kaggle/SDSB/images/sample_size64/'
 
 def crop_resize(img):
     """
@@ -85,7 +85,12 @@ def load_images(from_dir, verbose=True):
                 if verbose:
                     if total % 1000 == 0:
                         print('Images processed {0}'.format(total))
+                    if total == 1000:
+                        break
                 total += 1
+        if total == 1000:
+            break
+    
     x = 0
     try:
         while len(images) < 30:
