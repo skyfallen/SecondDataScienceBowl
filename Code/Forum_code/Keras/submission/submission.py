@@ -63,7 +63,7 @@ def submission():
 
     print('Loading models weights...')
     model_systole.load_weights(MODELPATH + '/weights_systole_best.hdf5')
-    model_diastole.load_weights(MODELPATH + '/weights_diastole_best.hdf5')
+    model_diastole.load_weights(MODELPATH + '/weights_diastole.hdf5')
 
     # load val losses to use as sigmas for CDF
     with open(MODELPATH + 'val_loss.txt', mode='r') as f:
