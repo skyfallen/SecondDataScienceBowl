@@ -4,7 +4,7 @@ import sys
 import numpy as np
 from keras.preprocessing.image import ImageDataGenerator
 
-from model import get_model
+#from model import get_model
 from utils import crps, real_to_cdf, preprocess, rotation_augmentation, shift_augmentation
 from datetime import datetime
 
@@ -17,6 +17,11 @@ if len(sys.argv) < 2:
 
 preproc_type = sys.argv[1]
 model_name = sys.argv[2]
+
+# Modify path variable where Python will search for files to be imported 
+sys.path.append('./models/' + model_name)
+from model import get_model
+
 current_date = "run_" + str(datetime.now()).replace(":", "-").split(".")[0].replace(" ", "_")
 
 PREPROCDATA = '/storage/hpc_dmytro/Kaggle/SDSB/images/' + preproc_type + '/'
