@@ -11,9 +11,9 @@ from datetime import datetime
 import os
 
 if len(sys.argv) < 2:
-  print('Usage:' + sys.argv[0] + '<preprocessing_type> <model_name>')
-  print('Usage example: python train.py size64 kbasic')
-  sys.exit(2)
+    print('Usage:' + sys.argv[0] + '<preprocessing_type> <model_name>')
+    print('Usage example: python train.py size64 kbasic')
+    sys.exit(2)
 
 preproc_type = sys.argv[1]
 model_name = sys.argv[2]
@@ -21,6 +21,8 @@ current_date = "run_" + str(datetime.now()).replace(":", "-").split(".")[0].repl
 
 PREPROCDATA = '/storage/hpc_dmytro/Kaggle/SDSB/images/' + preproc_type + '/'
 MODELS = '/storage/hpc_dmytro/Kaggle/SDSB/models/' + preproc_type + '/' + model_name + '/' + current_date + '/'
+STATS = MODELS + '/stats/'
+
 
 def load_train_data():
     """
@@ -88,6 +90,13 @@ def train():
     min_val_loss_systole = sys.float_info.max
     min_val_loss_diastole = sys.float_info.max
 
+    if not os.path.exists(STATS):
+        os.makedirs(STATS)
+
+    with open(STATS + 'RMSE_CRPS.txt', 'w') as f:
+        names = ['train_RMSE_d', 'train_RMSE_s', 'test_RMSE_d', 'test_RMSE_s', 'train_crps', 'test_crps']
+        f.write('\t'.join([str(name) for name in names]) + '\n')
+
     print('-'*50)
     print('Training...')
     print('-'*50)
@@ -97,15 +106,15 @@ def train():
         print('Iteration {0}/{1}'.format(i + 1, nb_iter))
         print('-'*50)
 
-	print('Augmenting images - rotations')
- 	X_train_aug = rotation_augmentation(X_train, 15)
- 	print('Augmenting images - shifts')
- 	X_train_aug = shift_augmentation(X_train_aug, 0.1, 0.1)
- 	print('Fitting systole model...')
- 	hist_systole = model_systole.fit(X_train_aug, y_train[:, 0], shuffle=True, nb_epoch=epochs_per_iter, batch_size=batch_size, validation_data=(X_test, y_test[:, 0]))
+        print('Augmenting images - rotations')
+        X_train_aug = rotation_augmentation(X_train, 15)
+        print('Augmenting images - shifts')
+        X_train_aug = shift_augmentation(X_train_aug, 0.1, 0.1)
+        print('Fitting systole model...')
+        hist_systole = model_systole.fit(X_train_aug, y_train[:, 0], shuffle=True, nb_epoch=epochs_per_iter, batch_size=batch_size, validation_data=(X_test, y_test[:, 0]))
         print('Fitting diastole model...')
-	
-	hist_diastole = model_diastole.fit(X_train_aug, y_train[:, 1], shuffle=True, nb_epoch=epochs_per_iter, batch_size=batch_size, validation_data=(X_test, y_test[:, 1]))
+
+        hist_diastole = model_diastole.fit(X_train_aug, y_train[:, 1], shuffle=True, nb_epoch=epochs_per_iter, batch_size=batch_size, validation_data=(X_test, y_test[:, 1]))
 
         # sigmas for predicted data, actually loss function values (RMSE)
         loss_systole = hist_systole.history['loss'][-1]
@@ -140,10 +149,8 @@ def train():
 
         print('Saving weights...')
 
-  	if not os.path.exists(MODELS):
-        	os.makedirs(MODELS)        
-	
-	# save weights so they can be loaded later
+
+        # save weights so they can be loaded later
         model_systole.save_weights(MODELS + 'weights_systole.hdf5', overwrite=True)
         model_diastole.save_weights(MODELS + 'weights_diastole.hdf5', overwrite=True)
 
@@ -161,5 +168,11 @@ def train():
             f.write(str(min_val_loss_systole))
             f.write('\n')
             f.write(str(min_val_loss_diastole))
+
+        with open(STATS + 'RMSE_CRPS.txt', 'a') as f:
+            # train_RMSE_d train_RMSE_s test_RMSE_d test_RMSE_s train_crps test_crps
+            rmse_values = [loss_diastole, loss_systole, val_loss_diastole, val_loss_systole]
+            crps_values = [crps_train, crps_test]
+            f.write('\t'.join([str(val) for val in rmse_values + crps_values]) + '\n')
 
 train()
