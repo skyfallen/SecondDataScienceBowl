@@ -12,7 +12,7 @@ def plot_res(columns, ylab):
     p.axes.get_xaxis().set_visible(True)
 
 
-def write_images(folder)
+def write_images(folder):
 
     filename = folder + '/RMSE_CRPS.txt'
     df = pandas.read_table(filename)
