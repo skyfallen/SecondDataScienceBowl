@@ -22,6 +22,9 @@ model_name = sys.argv[2]
 sys.path.append('./models/' + model_name)
 from model import get_model
 
+sys.path.append('./visualization/')
+from plotting import write_images
+
 current_date = "run_" + str(datetime.now()).replace(":", "-").split(".")[0].replace(" ", "_")
 
 PREPROCDATA = '/storage/hpc_dmytro/Kaggle/SDSB/images/' + preproc_type + '/'
@@ -179,5 +182,8 @@ def train():
             rmse_values = [loss_diastole, loss_systole, val_loss_diastole, val_loss_systole]
             crps_values = [crps_train, crps_test]
             f.write('\t'.join([str(val) for val in rmse_values + crps_values]) + '\n')
+
+        # writing intermediate images
+        write_images(STATS)
 
 train()
