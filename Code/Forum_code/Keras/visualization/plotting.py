@@ -1,6 +1,6 @@
 import pandas
 from matplotlib import pyplot as plt
-%matplotlib inline
+#%matplotlib inline
 plt.style.use('ggplot')
 
 def plot_res(columns, ylab):
