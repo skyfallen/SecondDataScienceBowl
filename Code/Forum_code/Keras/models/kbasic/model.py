@@ -17,7 +17,6 @@ def center_normalize(x):
 LR = 0.0001
 reg = 1e-3
 
-
 def get_model():
     model = Sequential()
     model.add(Activation(activation=center_normalize, input_shape=(32, 64, 64)))
