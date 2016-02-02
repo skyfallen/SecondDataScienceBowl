@@ -4,7 +4,7 @@ import csv
 import numpy as np
 import sys
 
-from model import get_model
+#from model import get_model
 from utils import real_to_cdf, preprocess
 
 if len(sys.argv) < 2:
@@ -14,6 +14,10 @@ if len(sys.argv) < 2:
 
 preproc_type = sys.argv[1]
 model_name = sys.argv[2]
+
+# Modify path variable where Python will search for files to be imported 
+sys.path.append('./models/' + model_name)
+from model import get_model
 
 MODELPATH = sys.argv[3]
 DATA = '/storage/hpc_dmytro/Kaggle/SDSB/images/' + preproc_type + '/'
