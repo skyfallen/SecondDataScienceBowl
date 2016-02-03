@@ -14,12 +14,9 @@ def center_normalize(x):
     """
     return (x - K.mean(x)) / K.std(x)
 
-LR = 0.0001
-reg = 1e-3
-
 def get_model():
     model = Sequential()
-    model.add(Activation(activation=center_normalize, input_shape=(32, 64, 64)))
+    model.add(Activation(activation=center_normalize, input_shape=(30, 64, 64)))
 
     model.add(Convolution2D(64, 3, 3, border_mode='same'))
     model.add(Activation('relu'))
@@ -45,11 +42,11 @@ def get_model():
     model.add(Dropout(0.25))
 
     model.add(Flatten())
-    model.add(Dense(1024, W_regularizer=l2(reg)))
+    model.add(Dense(1024, W_regularizer=l2(1e-03)))
     model.add(Activation('relu'))
     model.add(Dropout(0.5))
     model.add(Dense(1))
 
-    adam = Adam(lr=LR)
+    adam = Adam(lr=0.0001)
     model.compile(optimizer=adam, loss='rmse')
     return model
