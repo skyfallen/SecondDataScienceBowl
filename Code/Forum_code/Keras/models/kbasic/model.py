@@ -47,6 +47,6 @@ def get_model():
     model.add(Dropout(0.5))
     model.add(Dense(1))
 
-    adam = Adam(lr=0.0001)
+    adam = Adam(lr=0.00015)
     model.compile(optimizer=adam, loss='rmse')
     return model

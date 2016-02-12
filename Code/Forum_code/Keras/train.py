@@ -89,7 +89,7 @@ def train():
                                  featurewise_std_normalization=False,
                                  rotation_range=15)
 
-    nb_iter = 200
+    nb_iter = 1000
     epochs_per_iter = 1
     batch_size = 32
     calc_crps = 1  # calculate CRPS every n-th iteration (set to 0 if CRPS estimation is not needed)
