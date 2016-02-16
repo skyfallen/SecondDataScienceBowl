@@ -2,7 +2,8 @@ from __future__ import print_function
 
 from keras.models import Sequential
 from keras.layers.convolutional import Convolution2D, MaxPooling2D, ZeroPadding2D
-from keras.layers.core import Flatten, Dense, Dropout
+from keras.layers.core import Activation, Flatten, Dense, Dropout
+from keras.regularizers import l2
 from keras.optimizers import Adam
 from keras import backend as K 
 
@@ -17,7 +18,7 @@ def center_normalize(x):
     return (x - K.mean(x)) / K.std(x)
 
 #def VGG_16(weights_path=None):
- def get_model():
+def get_model():
     model = Sequential()	
     model.add(Activation(activation=center_normalize, input_shape=(30,64,64)))
     
