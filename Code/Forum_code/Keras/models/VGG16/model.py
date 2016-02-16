@@ -1,8 +1,14 @@
+from __future__ import print_function
+
 from keras.models import Sequential
-from keras.layers.core import Flatten, Dense, Dropout
 from keras.layers.convolutional import Convolution2D, MaxPooling2D, ZeroPadding2D
-from keras.optimizers import SGD
-import cv2, numpy as np
+from keras.layers.core import Flatten, Dense, Dropout
+from keras.optimizers import Adam
+from keras import backend as K 
+
+# from original vgg 
+# from keras.optimizers import SGD
+# import cv2, numpy as np
 
 def center_normalize(x):
     """
@@ -10,9 +16,12 @@ def center_normalize(x):
     """
     return (x - K.mean(x)) / K.std(x)
 
-def VGG_16(weights_path=None):
-    model = Sequential()
-    model.add(ZeroPadding2D((1,1),input_shape=(3,224,224)))
+#def VGG_16(weights_path=None):
+ def get_model():
+    model = Sequential()	
+    model.add(Activation(activation=center_normalize, input_shape=(30,64,64)))
+    
+    model.add(ZeroPadding2D((1,1)))
     model.add(Convolution2D(64, 3, 3, activation='relu'))
     model.add(ZeroPadding2D((1,1)))
     model.add(Convolution2D(64, 3, 3, activation='relu'))
@@ -51,26 +60,12 @@ def VGG_16(weights_path=None):
     model.add(Flatten())
     model.add(Dense(4096, activation='relu'))
     model.add(Dropout(0.5))
-    model.add(Dense(4096, activation='relu'))
+    model.add(Dense(1024, W_regularizer=l2(1e-03)))
+    model.add(Activation('relu'))
     model.add(Dropout(0.5))
-    model.add(Dense(1000, activation='softmax'))
+    model.add(Dense(1))
 
-    if weights_path:
-        model.load_weights(weights_path)
-
+    adam = Adam(lr=0.0001)
+    model.compile(optimizer=adam, loss='rmse')
     return model
 
-if __name__ == "__main__":
-    im = cv2.resize(cv2.imread('cat.jpg'), (224, 224)).astype(np.float32)
-    im[:,:,0] -= 103.939
-    im[:,:,1] -= 116.779
-    im[:,:,2] -= 123.68
-    im = im.transpose((2,0,1))
-    im = np.expand_dims(im, axis=0)
-
-    # Test pretrained model
-    model = VGG_16('vgg16_weights.h5')
-    sgd = SGD(lr=0.1, decay=1e-6, momentum=0.9, nesterov=True)
-    model.compile(optimizer=sgd, loss='categorical_crossentropy')
-    out = model.predict(im)
-    print np.argmax(out)
