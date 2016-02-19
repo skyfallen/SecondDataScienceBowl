@@ -187,12 +187,13 @@ def train():
         # writing intermediate images
         write_images(STATS)
         
-        if i % 50 == 0 and i != 0:
-            SUBMISSION_FOLDER = SUBMISSION + preproc_type + "/" model_name + "/" + get_name() + "_" + str(i) + "/" 
+        if i == 0:
+            SUBMISSION_FOLDER = SUBMISSION + preproc_type + "/" + model_name + "/" + get_name() + "_" + str(i) + "/" 
             if not os.path.exists(SUBMISSION_FOLDER):
                 os.makedirs(SUBMISSION_FOLDER)
             copyfile(MODELS + 'weights_systole_best.hdf5', SUBMISSION_FOLDER + 'weights_systole_best.hdf5')
             copyfile(MODELS + 'weights_diastole_best.hdf5', SUBMISSION_FOLDER + 'weights_diastole_best.hdf5')
+            copyfile(MODELS + 'val_loss.txt', SUBMISSION_FOLDER + 'val_loss.txt')
             os.system('python submission.py %s %s %s' % (preproc_type, model_name, SUBMISSION_FOLDER))
 
 train()

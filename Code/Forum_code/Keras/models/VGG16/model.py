@@ -14,7 +14,7 @@ from keras import backend as K
 LR = 0.0001
 REG = 0.0001
 
-def get_model_name():
+def get_name():
     return "LR" + str(LR) + "_REG" + str(REG)
 
 def center_normalize(x):
