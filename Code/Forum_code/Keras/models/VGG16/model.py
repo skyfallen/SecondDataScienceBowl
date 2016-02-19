@@ -11,6 +11,12 @@ from keras import backend as K
 # from keras.optimizers import SGD
 # import cv2, numpy as np
 
+LR = 0.0001
+REG = 0.0001
+
+def get_model_name():
+    return "LR" + str(LR) + "_REG" + str(REG)
+
 def center_normalize(x):
     """
     Custom activation for online sample-wise center and std. normalization
@@ -61,12 +67,12 @@ def get_model():
     model.add(Flatten())
     model.add(Dense(4096, activation='relu'))
     model.add(Dropout(0.5))
-    model.add(Dense(1024, W_regularizer=l2(1e-03)))
+    model.add(Dense(1024, W_regularizer=l2(REG)))
     model.add(Activation('relu'))
     model.add(Dropout(0.5))
     model.add(Dense(1))
 
-    adam = Adam(lr=0.0001)
+    adam = Adam(lr=LR)
     model.compile(optimizer=adam, loss='rmse')
     return model
 
