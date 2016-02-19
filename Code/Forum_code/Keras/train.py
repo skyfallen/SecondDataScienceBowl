@@ -9,9 +9,10 @@ from utils import crps, real_to_cdf, preprocess, rotation_augmentation, shift_au
 from datetime import datetime
 
 import os
+from shutil import copyfile
 
-if len(sys.argv) < 2:
-    print('Usage:' + sys.argv[0] + '<preprocessing_type> <model_name>')
+if len(sys.argv) < 1:
+    print('Usage:' + sys.argv[0] + '<preprocessing_type> <modelname>')
     print('Usage example: python train.py size64 kbasic')
     sys.exit(2)
 
@@ -20,7 +21,7 @@ model_name = sys.argv[2]
 
 # Modify path variable where Python will search for files to be imported 
 sys.path.append('./models/' + model_name)
-from model import get_model
+from model import get_model, get_name
 
 sys.path.append('./visualization/')
 from plotting import write_images
@@ -30,7 +31,7 @@ current_date = "run_" + str(datetime.now()).replace(":", "-").split(".")[0].repl
 PREPROCDATA = '/storage/hpc_dmytro/Kaggle/SDSB/images/' + preproc_type + '/'
 MODELS = '/storage/hpc_dmytro/Kaggle/SDSB/models/' + preproc_type + '/' + model_name + '/' + current_date + '/'
 STATS = MODELS + '/stats/'
-
+SUBMISSION = '/storage/hpc_dmytro/Kaggle/SDSB/submissions/'
 
 def load_train_data():
     """
@@ -89,7 +90,7 @@ def train():
                                  featurewise_std_normalization=False,
                                  rotation_range=15)
 
-    nb_iter = 1000
+    nb_iter = 200
     epochs_per_iter = 1
     batch_size = 32
     calc_crps = 1  # calculate CRPS every n-th iteration (set to 0 if CRPS estimation is not needed)
@@ -185,5 +186,13 @@ def train():
 
         # writing intermediate images
         write_images(STATS)
+        
+        if i % 50 == 0 and i != 0:
+            SUBMISSION_FOLDER = SUBMISSION + preproc_type + "/" model_name + "/" + get_name() + "_" + str(i) + "/" 
+            if not os.path.exists(SUBMISSION_FOLDER):
+                os.makedirs(SUBMISSION_FOLDER)
+            copyfile(MODELS + 'weights_systole_best.hdf5', SUBMISSION_FOLDER + 'weights_systole_best.hdf5')
+            copyfile(MODELS + 'weights_diastole_best.hdf5', SUBMISSION_FOLDER + 'weights_diastole_best.hdf5')
+            os.system('python submission.py %s %s %s' % (preproc_type, model_name, SUBMISSION_FOLDER))
 
 train()
