@@ -3,11 +3,20 @@ from __future__ import print_function
 import os
 import numpy as np
 import dicom
+import sys
 from scipy.misc import imresize
+
+if len(sys.argv) < 1:
+    print('Usage: ' + sys.argv[0] + ' <image_size>')
+    print('Usage example: python data.py 64')
+    sys.exit(2)
+
+img_size = int(sys.argv[1])
 
 RAWDATA = '/storage/hpc_dmytro/Kaggle/SDSB/images/raw/'
 LABELSDIR = '/storage/hpc_dmytro/Kaggle/SDSB/labels/'
-PREPROCDATA = '/storage/hpc_dmytro/Kaggle/SDSB/images/size64/'
+#PREPROCDATA = '/storage/hpc_dmytro/Kaggle/SDSB/images/size64/'
+PREPROCDATA = '/storage/hpc_dmytro/Kaggle/SDSB/images/size' + str(img_size) + '/'
 
 def crop_resize(img):
     """
@@ -184,6 +193,7 @@ def write_validation_npy():
 
 # Code to run
 img_resize = True
-img_shape = (64, 64)
+#img_shape = (64, 64)
+img_shape = (img_size, img_size)
 write_train_npy()
 write_validation_npy()
