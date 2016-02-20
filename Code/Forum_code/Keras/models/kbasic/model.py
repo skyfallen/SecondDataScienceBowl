@@ -7,6 +7,11 @@ from keras.optimizers import Adam
 from keras.regularizers import l2
 from keras import backend as K
 
+LR = 0.0001
+REG = 0.0001
+
+def get_name():
+    return "LR" + str(LR) + "_REG" + str(REG)
 
 def center_normalize(x):
     """
@@ -42,11 +47,11 @@ def get_model():
     model.add(Dropout(0.25))
 
     model.add(Flatten())
-    model.add(Dense(1024, W_regularizer=l2(1e-03)))
+    model.add(Dense(1024, W_regularizer=l2(REG)))
     model.add(Activation('relu'))
     model.add(Dropout(0.5))
     model.add(Dense(1))
 
-    adam = Adam(lr=0.00015)
+    adam = Adam(lr=LR)
     model.compile(optimizer=adam, loss='rmse')
     return model
