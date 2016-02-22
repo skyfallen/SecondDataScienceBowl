@@ -184,11 +184,12 @@ def train():
             crps_values = [crps_train, crps_test]
             f.write('\t'.join([str(val) for val in rmse_values + crps_values]) + '\n')
 
-        # writing intermediate images
+        print('Saving stats images...')
         write_images(STATS)
         
-        if i % 50 == 0 & i != 0:
-            SUBMISSION_FOLDER = SUBMISSION + preproc_type + "/" + model_name + "/" + get_name() + "_ITERS" + str(i) + "/" 
+        if (i != 0) & ((i + 1) % 50 == 0):
+	    print('Submitting learned model....')
+            SUBMISSION_FOLDER = SUBMISSION + preproc_type + "/" + model_name + "/" + get_name() + "_ITERS" + str(i + 1) + "/" 
             if not os.path.exists(SUBMISSION_FOLDER):
                 os.makedirs(SUBMISSION_FOLDER)
             copyfile(MODELS + 'weights_systole_best.hdf5', SUBMISSION_FOLDER + 'weights_systole_best.hdf5')
