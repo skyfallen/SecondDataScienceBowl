@@ -91,7 +91,7 @@ def train():
                                  featurewise_std_normalization=False,
                                  rotation_range=15)
 
-    nb_iter = 200
+    nb_iter = 300
     epochs_per_iter = 1
     batch_size = 64
     calc_crps = 1  # calculate CRPS every n-th iteration (set to 0 if CRPS estimation is not needed)
@@ -188,7 +188,7 @@ def train():
         print('Saving stats images...')
         write_images(STATS)
         
-        if (i != 0) & ((i + 1) % 50 == 0):
+        if (i != 0) & ((i + 1) % 100 == 0):
 	    print('Submitting learned model....')
             SUBMISSION_FOLDER = SUBMISSION + preproc_type + "/" + model_name + "/" + get_name() + "_ITERS" + str(i + 1) + "/" 
             if not os.path.exists(SUBMISSION_FOLDER):
