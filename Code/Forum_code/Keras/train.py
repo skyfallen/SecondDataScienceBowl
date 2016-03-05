@@ -92,7 +92,7 @@ def train():
 
     nb_iter = 200
     epochs_per_iter = 1
-    batch_size = 32
+    batch_size = 64
     calc_crps = 1  # calculate CRPS every n-th iteration (set to 0 if CRPS estimation is not needed)
 
     # remember min val. losses (best iterations), used as sigmas for submission
