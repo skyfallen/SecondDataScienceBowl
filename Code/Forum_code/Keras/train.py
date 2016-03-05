@@ -18,6 +18,7 @@ if len(sys.argv) < 1:
 
 preproc_type = sys.argv[1]
 model_name = sys.argv[2]
+img_size = int(preproc_type[-2:])
 
 # Modify path variable where Python will search for files to be imported 
 sys.path.append('./models/' + model_name)
@@ -73,8 +74,8 @@ def train():
     Training systole and diastole models.
     """
     print('Loading and compiling models...')
-    model_systole = get_model()
-    model_diastole = get_model()
+    model_systole = get_model(img_size)
+    model_diastole = get_model(img_size)
 
     print('Loading training data...')
     X, y = load_train_data()

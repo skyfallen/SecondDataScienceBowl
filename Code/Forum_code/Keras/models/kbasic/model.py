@@ -19,29 +19,33 @@ def center_normalize(x):
     """
     return (x - K.mean(x)) / K.std(x)
 
-def get_model():
+def get_model(img_size):
+    
+    img_size2 = img_size + img_size / 2
+    img_size3 = img_size * 2
+
     model = Sequential()
-    model.add(Activation(activation=center_normalize, input_shape=(30, 64, 64)))
+    model.add(Activation(activation=center_normalize, input_shape=(30, img_size, img_size)))
 
-    model.add(Convolution2D(64, 3, 3, border_mode='same'))
+    model.add(Convolution2D(img_size, 3, 3, border_mode='same'))
     model.add(Activation('relu'))
-    model.add(Convolution2D(64, 3, 3, border_mode='valid'))
+    model.add(Convolution2D(img_size, 3, 3, border_mode='valid'))
     model.add(Activation('relu'))
     model.add(ZeroPadding2D(padding=(1, 1)))
     model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
     model.add(Dropout(0.25))
 
-    model.add(Convolution2D(96, 3, 3, border_mode='same'))
+    model.add(Convolution2D(img_size2, 3, 3, border_mode='same'))
     model.add(Activation('relu'))
-    model.add(Convolution2D(96, 3, 3, border_mode='valid'))
+    model.add(Convolution2D(img_size2, 3, 3, border_mode='valid'))
     model.add(Activation('relu'))
     model.add(ZeroPadding2D(padding=(1, 1)))
     model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
     model.add(Dropout(0.25))
 
-    model.add(Convolution2D(128, 2, 2, border_mode='same'))
+    model.add(Convolution2D(im_size3, 2, 2, border_mode='same'))
     model.add(Activation('relu'))
-    model.add(Convolution2D(128, 2, 2, border_mode='same'))
+    model.add(Convolution2D(img_size3, 2, 2, border_mode='same'))
     model.add(Activation('relu'))
     model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
     model.add(Dropout(0.25))

@@ -24,44 +24,49 @@ def center_normalize(x):
     return (x - K.mean(x)) / K.std(x)
 
 #def VGG_16(weights_path=None):
-def get_model():
+def get_model(img_size):
+
+    img_size2 = img_size + img_size / 2
+    img_size3 = img_size * 2
+    img_size4 = img_size * 2 + img_size / 2
+
     model = Sequential()	
-    model.add(Activation(activation=center_normalize, input_shape=(30,64,64)))
+    model.add(Activation(activation=center_normalize, input_shape=(30, img_size, img_size)))
     
     model.add(ZeroPadding2D((1,1)))
-    model.add(Convolution2D(64, 3, 3, activation='relu'))
+    model.add(Convolution2D(img_size, 3, 3, activation='relu'))
     model.add(ZeroPadding2D((1,1)))
-    model.add(Convolution2D(64, 3, 3, activation='relu'))
+    model.add(Convolution2D(img_size, 3, 3, activation='relu'))
     model.add(MaxPooling2D((2,2), strides=(2,2)))
 
     model.add(ZeroPadding2D((1,1)))
-    model.add(Convolution2D(128, 3, 3, activation='relu'))
+    model.add(Convolution2D(img_size2, 3, 3, activation='relu'))
     model.add(ZeroPadding2D((1,1)))
-    model.add(Convolution2D(128, 3, 3, activation='relu'))
+    model.add(Convolution2D(img_size2, 3, 3, activation='relu'))
     model.add(MaxPooling2D((2,2), strides=(2,2)))
 
     model.add(ZeroPadding2D((1,1)))
-    model.add(Convolution2D(256, 3, 3, activation='relu'))
+    model.add(Convolution2D(img_size3, 3, 3, activation='relu'))
     model.add(ZeroPadding2D((1,1)))
-    model.add(Convolution2D(256, 3, 3, activation='relu'))
+    model.add(Convolution2D(img_size3, 3, 3, activation='relu'))
     model.add(ZeroPadding2D((1,1)))
-    model.add(Convolution2D(256, 3, 3, activation='relu'))
+    model.add(Convolution2D(img_size3, 3, 3, activation='relu'))
     model.add(MaxPooling2D((2,2), strides=(2,2)))
 
     model.add(ZeroPadding2D((1,1)))
-    model.add(Convolution2D(512, 3, 3, activation='relu'))
+    model.add(Convolution2D(img_size4, 3, 3, activation='relu'))
     model.add(ZeroPadding2D((1,1)))
-    model.add(Convolution2D(512, 3, 3, activation='relu'))
+    model.add(Convolution2D(img_size4, 3, 3, activation='relu'))
     model.add(ZeroPadding2D((1,1)))
-    model.add(Convolution2D(512, 3, 3, activation='relu'))
+    model.add(Convolution2D(img_size4, 3, 3, activation='relu'))
     model.add(MaxPooling2D((2,2), strides=(2,2)))
 
     model.add(ZeroPadding2D((1,1)))
-    model.add(Convolution2D(512, 3, 3, activation='relu'))
+    model.add(Convolution2D(img_size4, 3, 3, activation='relu'))
     model.add(ZeroPadding2D((1,1)))
-    model.add(Convolution2D(512, 3, 3, activation='relu'))
+    model.add(Convolution2D(img_size4, 3, 3, activation='relu'))
     model.add(ZeroPadding2D((1,1)))
-    model.add(Convolution2D(512, 3, 3, activation='relu'))
+    model.add(Convolution2D(img_size4, 3, 3, activation='relu'))
     model.add(MaxPooling2D((2,2), strides=(2,2)))
 
     model.add(Flatten())
